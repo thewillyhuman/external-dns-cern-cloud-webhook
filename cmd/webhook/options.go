@@ -10,6 +10,18 @@ import (
 	"github.com/thewillyhuman/external-dns-cern-cloud-webhook/pkg/config"
 )
 
+const (
+	OpenStackAuthURL            = "os-auth-url"
+	OpenStackProjectName        = "os-project-name"
+	OpenStackUserDomainName     = "os-user-domain-name"
+	OpenStackProjectDomainID    = "os-project-domain-id"
+	OpenStackUsername           = "os-username"
+	OpenStackPassword           = "os-password"
+	OpenStackRegionName         = "os-region-name"
+	OpenStackInterface          = "os-interface"
+	OpenStackIdentityAPIVersion = "os-identity-api-version"
+)
+
 // loadConfig initializes and returns the application's configuration.
 //
 // This function is responsible for defining all command-line flags, setting up viper
@@ -23,15 +35,15 @@ func loadConfig() (*config.Config, error) {
 	pflag.String("listen-address", "0.0.0.0", "The IP address to listen on")
 	pflag.Int("listen-port", 8888, "The port to listen on")
 	pflag.String("log-level", "info", "Log level (debug, info, warn, error)")
-	pflag.String("os-auth-url", "", "OpenStack Auth URL")
-	pflag.String("os-project-name", "", "OpenStack Project Name")
-	pflag.String("os-user-domain-name", "", "OpenStack User Domain Name")
-	pflag.String("os-project-domain-id", "", "OpenStack Project Domain ID")
-	pflag.String("os-username", "", "OpenStack Username")
-	pflag.String("os-password", "", "OpenStack Password")
-	pflag.String("os-region-name", "", "OpenStack Region Name")
-	pflag.String("os-interface", "", "OpenStack Interface")
-	pflag.String("os-identity-api-version", "", "OpenStack Identity API Version")
+	pflag.String(OpenStackAuthURL, "", "OpenStack Auth URL")
+	pflag.String(OpenStackProjectName, "", "OpenStack Project Name")
+	pflag.String(OpenStackUserDomainName, "", "OpenStack User Domain Name")
+	pflag.String(OpenStackProjectDomainID, "", "OpenStack Project Domain ID")
+	pflag.String(OpenStackUsername, "", "OpenStack Username")
+	pflag.String(OpenStackPassword, "", "OpenStack Password")
+	pflag.String(OpenStackRegionName, "", "OpenStack Region Name")
+	pflag.String(OpenStackInterface, "", "OpenStack Interface")
+	pflag.String(OpenStackIdentityAPIVersion, "", "OpenStack Identity API Version")
 	pflag.Parse()
 
 	// Initialize viper to manage configuration.
@@ -59,15 +71,15 @@ func loadConfig() (*config.Config, error) {
 		ListenAddress:               v.GetString("listen-address"),
 		ListenPort:                  v.GetInt("listen-port"),
 		LogLevel:                    v.GetString("log-level"),
-		OpenStackAuthURL:            v.GetString("os-auth-url"),
-		OpenStackProjectName:        v.GetString("os-project-name"),
-		OpenStackUserDomainName:     v.GetString("os-user-domain-name"),
-		OpenStackProjectDomainID:    v.GetString("os-project-domain-id"),
-		OpenStackUsername:           v.GetString("os-username"),
-		OpenStackPassword:           v.GetString("os-password"),
-		OpenStackRegionName:         v.GetString("os-region-name"),
-		OpenStackInterface:          v.GetString("os-interface"),
-		OpenStackIdentityAPIVersion: v.GetString("os-identity-api-version"),
+		OpenStackAuthURL:            v.GetString(OpenStackAuthURL),
+		OpenStackProjectName:        v.GetString(OpenStackProjectName),
+		OpenStackUserDomainName:     v.GetString(OpenStackUserDomainName),
+		OpenStackProjectDomainID:    v.GetString(OpenStackProjectDomainID),
+		OpenStackUsername:           v.GetString(OpenStackUsername),
+		OpenStackPassword:           v.GetString(OpenStackPassword),
+		OpenStackRegionName:         v.GetString(OpenStackRegionName),
+		OpenStackInterface:          v.GetString(OpenStackInterface),
+		OpenStackIdentityAPIVersion: v.GetString(OpenStackIdentityAPIVersion),
 	}
 
 	// Validate that all required OpenStack configuration parameters are present.
@@ -75,15 +87,15 @@ func loadConfig() (*config.Config, error) {
 		value string
 		name  string
 	}{
-		{cfg.OpenStackAuthURL, "os-auth-url"},
-		{cfg.OpenStackProjectName, "os-project-name"},
-		{cfg.OpenStackUserDomainName, "os-user-domain-name"},
-		{cfg.OpenStackProjectDomainID, "os-project-domain-id"},
-		{cfg.OpenStackUsername, "os-username"},
-		{cfg.OpenStackPassword, "os-password"},
-		{cfg.OpenStackRegionName, "os-region-name"},
-		{cfg.OpenStackInterface, "os-interface"},
-		{cfg.OpenStackIdentityAPIVersion, "os-identity-api-version"},
+		{cfg.OpenStackAuthURL, OpenStackAuthURL},
+		{cfg.OpenStackProjectName, OpenStackProjectName},
+		{cfg.OpenStackUserDomainName, OpenStackUserDomainName},
+		{cfg.OpenStackProjectDomainID, OpenStackProjectDomainID},
+		{cfg.OpenStackUsername, OpenStackUsername},
+		{cfg.OpenStackPassword, OpenStackPassword},
+		{cfg.OpenStackRegionName, OpenStackRegionName},
+		{cfg.OpenStackInterface, OpenStackInterface},
+		{cfg.OpenStackIdentityAPIVersion, OpenStackIdentityAPIVersion},
 	}
 
 	for _, required := range requiredConfigs {
