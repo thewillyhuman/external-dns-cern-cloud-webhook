@@ -1,6 +1,6 @@
 module github.com/thewillyhuman/external-dns-cern-cloud-webhook
 
-go 1.25
+go 1.24.0
 
 require (
 	github.com/gophercloud/gophercloud v1.14.1

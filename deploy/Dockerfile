@@ -4,7 +4,7 @@
 # This stage is responsible for compiling the Go application into a static binary.
 # We use a specific version of the golang:alpine image to ensure a reproducible build environment.
 # The 'builder' alias is used to reference this stage in the final stage.
-FROM golang:1.24.4-alpine AS builder
+FROM golang:1.24-alpine AS builder
 
 # Set the working directory inside the container.
 # This is where the subsequent commands will be executed.
