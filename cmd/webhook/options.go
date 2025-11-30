@@ -11,15 +11,13 @@ import (
 )
 
 const (
-	OpenStackAuthURL            = "os-auth-url"
-	OpenStackProjectName        = "os-project-name"
-	OpenStackUserDomainName     = "os-user-domain-name"
-	OpenStackProjectDomainID    = "os-project-domain-id"
-	OpenStackUsername           = "os-username"
-	OpenStackPassword           = "os-password"
-	OpenStackRegionName         = "os-region-name"
-	OpenStackInterface          = "os-interface"
-	OpenStackIdentityAPIVersion = "os-identity-api-version"
+	OpenStackAuthURL         = "os-auth-url"
+	OpenStackProjectName     = "os-project-name"
+	OpenStackUserDomainName  = "os-user-domain-name"
+	OpenStackProjectDomainID = "os-project-domain-id"
+	OpenStackUsername        = "os-username"
+	OpenStackPassword        = "os-password"
+	OpenStackRegionName      = "os-region-name"
 )
 
 // loadConfig initializes and returns the application's configuration.
@@ -42,8 +40,6 @@ func loadConfig() (*config.Config, error) {
 	pflag.String(OpenStackUsername, "", "OpenStack Username")
 	pflag.String(OpenStackPassword, "", "OpenStack Password")
 	pflag.String(OpenStackRegionName, "", "OpenStack Region Name")
-	pflag.String(OpenStackInterface, "", "OpenStack Interface")
-	pflag.String(OpenStackIdentityAPIVersion, "", "OpenStack Identity API Version")
 	pflag.Bool("dry-run", false, "Run in dry-run mode")
 	pflag.String("ingress-label", "node-role.kubernetes.io/ingress", "Label to filter ingress nodes")
 	pflag.StringSlice("domain-filter", []string{}, "Filter domains")
@@ -81,8 +77,6 @@ func loadConfig() (*config.Config, error) {
 		OpenStackUsername,
 		OpenStackPassword,
 		OpenStackRegionName,
-		OpenStackInterface,
-		OpenStackIdentityAPIVersion,
 	} {
 		envVar := strings.ToUpper(strings.ReplaceAll(key, "-", "_"))
 		if err := v.BindEnv(key, envVar); err != nil {
@@ -94,24 +88,22 @@ func loadConfig() (*config.Config, error) {
 	// The GetString and GetInt methods are used to retrieve the values of the
 	// configuration options.
 	cfg := &config.Config{
-		ListenAddress:               v.GetString("listen-address"),
-		ListenPort:                  v.GetInt("listen-port"),
-		LogLevel:                    v.GetString("log-level"),
-		OpenStackAuthURL:            v.GetString(OpenStackAuthURL),
-		OpenStackProjectName:        v.GetString(OpenStackProjectName),
-		OpenStackUserDomainName:     v.GetString(OpenStackUserDomainName),
-		OpenStackProjectDomainID:    v.GetString(OpenStackProjectDomainID),
-		OpenStackUsername:           v.GetString(OpenStackUsername),
-		OpenStackPassword:           v.GetString(OpenStackPassword),
-		OpenStackRegionName:         v.GetString(OpenStackRegionName),
-		OpenStackInterface:          v.GetString(OpenStackInterface),
-		OpenStackIdentityAPIVersion: v.GetString(OpenStackIdentityAPIVersion),
-		DryRun:                      v.GetBool("dry-run"),
-		IngressLabel:                v.GetString("ingress-label"),
-		DomainFilter:                v.GetStringSlice("domain-filter"),
-		ExcludeDomains:              v.GetStringSlice("exclude-domains"),
-		TXTPrefix:                   v.GetString("txt-prefix"),
-		TXTSuffix:                   v.GetString("txt-suffix"),
+		ListenAddress:            v.GetString("listen-address"),
+		ListenPort:               v.GetInt("listen-port"),
+		LogLevel:                 v.GetString("log-level"),
+		OpenStackAuthURL:         v.GetString(OpenStackAuthURL),
+		OpenStackProjectName:     v.GetString(OpenStackProjectName),
+		OpenStackUserDomainName:  v.GetString(OpenStackUserDomainName),
+		OpenStackProjectDomainID: v.GetString(OpenStackProjectDomainID),
+		OpenStackUsername:        v.GetString(OpenStackUsername),
+		OpenStackPassword:        v.GetString(OpenStackPassword),
+		OpenStackRegionName:      v.GetString(OpenStackRegionName),
+		DryRun:                   v.GetBool("dry-run"),
+		IngressLabel:             v.GetString("ingress-label"),
+		DomainFilter:             v.GetStringSlice("domain-filter"),
+		ExcludeDomains:           v.GetStringSlice("exclude-domains"),
+		TXTPrefix:                v.GetString("txt-prefix"),
+		TXTSuffix:                v.GetString("txt-suffix"),
 	}
 
 	// Validate that all required OpenStack configuration parameters are present.
@@ -126,8 +118,6 @@ func loadConfig() (*config.Config, error) {
 		{cfg.OpenStackUsername, OpenStackUsername},
 		{cfg.OpenStackPassword, OpenStackPassword},
 		{cfg.OpenStackRegionName, OpenStackRegionName},
-		{cfg.OpenStackInterface, OpenStackInterface},
-		{cfg.OpenStackIdentityAPIVersion, OpenStackIdentityAPIVersion},
 	}
 
 	for _, required := range requiredConfigs {
