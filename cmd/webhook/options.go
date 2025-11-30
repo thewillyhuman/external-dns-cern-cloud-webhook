@@ -70,6 +70,26 @@ func loadConfig() (*config.Config, error) {
 		return nil, err
 	}
 
+	// Explicitly bind environment variables for OpenStack configuration.
+	// This ensures that environment variables are correctly mapped even if
+	// there are issues with automatic mapping or flag interactions.
+	for _, key := range []string{
+		OpenStackAuthURL,
+		OpenStackProjectName,
+		OpenStackUserDomainName,
+		OpenStackProjectDomainID,
+		OpenStackUsername,
+		OpenStackPassword,
+		OpenStackRegionName,
+		OpenStackInterface,
+		OpenStackIdentityAPIVersion,
+	} {
+		envVar := strings.ToUpper(strings.ReplaceAll(key, "-", "_"))
+		if err := v.BindEnv(key, envVar); err != nil {
+			return nil, err
+		}
+	}
+
 	// Create a new Config object and populate it with the values from viper.
 	// The GetString and GetInt methods are used to retrieve the values of the
 	// configuration options.
