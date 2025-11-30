@@ -1,0 +1,16 @@
+.git
+.idea
+.vscode
+bin/
+tools/
+deploy/
+idea.txt
+GEMINI.md
+Makefile
+README.md
+CHANGELOG.md
+CREDITS.md
+.gitignore
+.gitlint
+.mailmap
+.docs

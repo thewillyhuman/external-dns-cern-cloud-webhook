@@ -1,0 +1,19 @@
+[general]
+regex-style-search=True
+ignore=body-is-missing
+
+[title-max-length]
+line-length=72
+
+[body-max-line-length]
+line-length=72
+
+[ignore-body-lines]
+# Ignore HTTP reference links
+# Ignore lines that start with 'Co-Authored-By', with 'Signed-off-by' or with 'Fixes'
+regex=(^\[.+\]: http.+)|(^Co-Authored-By)|(^Signed-off-by)|(^Fixes:)
+
+# Ignore rules for certain automated authors
+[ignore-by-author-name]
+regex=dependabot
+ignore=all

@@ -20,6 +20,7 @@ go.work
 
 # Local binary
 external-dns-cern-cloud-webhook
+webhook
 
 # IDE settings
 .idea/
@@ -33,3 +34,7 @@ external-dns-cern-cloud-webhook
 .Trashes
 ehthumbs.db
 Thumbs.db
+
+# Project specific
+idea.txt
+GEMINI.md

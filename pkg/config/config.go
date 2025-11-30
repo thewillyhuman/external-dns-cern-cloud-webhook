@@ -36,4 +36,16 @@ type Config struct {
 	OpenStackInterface string
 	// OpenStackIdentityAPIVersion is the version of the OpenStack Identity API to use.
 	OpenStackIdentityAPIVersion string
+	// DryRun enables dry-run mode, where no changes are applied.
+	DryRun bool
+	// IngressLabel is the label used to filter ingress nodes in OpenStack.
+	IngressLabel string
+	// DomainFilter is a list of domains to filter.
+	DomainFilter []string
+	// ExcludeDomains is a list of domains to exclude.
+	ExcludeDomains []string
+	// TXTPrefix is the prefix for TXT records.
+	TXTPrefix string
+	// TXTSuffix is the suffix for TXT records.
+	TXTSuffix string
 }

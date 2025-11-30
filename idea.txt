@@ -1,0 +1,90 @@
+We are creating an ExternalDNS Provider that will work with CERN infrastructure.
+For that we must implement the ExternalDNS Provider interface, the skeleton
+of the project is almost done if not done. What is left is to integrate it with
+CERN infrastructure.
+
+How does CERN Infra is managed?
+
+At CERN we do use OpenStack and Magnum, so in order to interacti with the
+infrastructure we will do it via OpenStack go libraries.
+
+How do we update DNSs?
+
+First, at CERN not all nodes are exposed as ingresses, only those with a special
+label are able to receive traffic, this lable must be given by the users in the
+configuration of the provider.
+
+Then, CERN uses a special metadata property on the openstack instances named
+landb-alias. The aliases defined in this property are propagated to the CERN
+DNSs. This property has some rules:
+
+* All records need to end in --load-X-, that represents the alias order in the
+DNS. Basically each alias is an A record in CERN DNS. If multiple nodes are
+marked as ingress first one will contain <aliasA>--load-0-, second node
+<aliasA>--load-1-, and so on.
+* If multiple aliases need to point to the same cluster then they can be comma
+separated. For example, landb-alias=<aliasA>--load-0-,<aliasB>--load-0-.
+* The label landb-alias can only take up to 254 chars, commas and everything
+included. If more that that then we need to add more labdb-alias labels, each
+th and increassed index. Ex. landb-alias=..., landb-alias2=..., etc..
+
+CERN DNS updates run once every 15 minutes, so in order to avoid service
+interrupions because the update of the DNS runs in the middle of a reconciliation
+we must try to be as atomic as possible. What this means is that we will try
+to set instance properties all at once and then if some needs to be removed
+we will remove them.
+
+Here are some examples about how to update and delete instance properties on
+openstack:
+
+// SetInstanceProperties updates or creates metadata keys on a server.
+func (p *Provider) SetInstanceProperties(ctx context.Context, instanceName string, properties *PropertySet) error {
+	log := log.Log
+	return p.retryWithReauth(func() error {
+		serverID, err := p.getServerID(ctx, instanceName)
+		if err != nil {
+			return fmt.Errorf("failed to get server ID for %q: %w", instanceName, err)
+		}
+
+		// Use UpdateMetadata, which replaces keys specified in the map
+		// and leaves other keys untouched.
+		result := servers.UpdateMetadata(ctx, p.computeClient, serverID, properties)
+		if result.Err != nil {
+			log.Error(result.Err, "error setting instance properties", "instance", instanceName)
+			return result.Err
+		}
+		return nil
+	})
+}
+
+// DeleteInstanceProperty deletes a metadata key on a server.
+func (p *Provider) DeleteInstanceProperty(ctx context.Context, instanceName, propertyKey string) error {
+	log := log.Log
+	return p.retryWithReauth(func() error {
+		serverID, err := p.getServerID(ctx, instanceName)
+		if err != nil {
+			return fmt.Errorf("failed to get server ID for %q: %w", instanceName, err)
+		}
+
+		result := servers.DeleteMetadatum(ctx, p.computeClient, serverID, propertyKey)
+		if result.Err != nil {
+			log.Error(result.Err, "error deleting instance property", "key", propertyKey, "instance", instanceName)
+			return result.Err
+		}
+		return nil
+	})
+}
+
+---
+
+Also we will need to keep the number of updates to the miminum, this means that
+we will try to iterate the kubernetes ingress nodes in a deterministic way so
+that we dont have to be updatating the --load-X- all the time.
+
+Logging is very important for debugging porpoises and to give the user insights
+of what is going on.
+
+Try to decouple things so the way of computing which nodes need to have which
+aliases is not meesed with other logic please. Same for obtaining the kubernetes
+ingresses and things like that. Create clear boundaires between layers. If you
+want even interfaces in case some day we need to change some specific part.

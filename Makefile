@@ -10,7 +10,7 @@ BINARY_NAME=external-dns-cern-cloud-webhook
 # The path to the main package.
 CMD_PATH=./cmd/webhook
 # The name of the Docker image to be built.
-IMAGE_NAME=external-dns-cern-cloud-webhook
+IMAGE_NAME=ghcr.io/thewillyhuman/external-dns-cern-cloud-webhook
 # The maximum allowed size for the Docker image in bytes (2MB).
 MAX_IMAGE_SIZE_BYTES=2097152
 
@@ -32,7 +32,7 @@ build:
 # The 'build-image' target builds the Docker image for the application.
 build-image:
 	@echo "Building Docker image..."
-	docker build -t $(IMAGE_NAME) .
+	docker build -f deploy/Dockerfile -t $(IMAGE_NAME) .
 	@echo "Docker image '$(IMAGE_NAME)' built."
 
 # The 'test-image' target tests the Docker image.
