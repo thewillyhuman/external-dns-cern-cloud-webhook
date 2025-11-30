@@ -23,7 +23,6 @@ func NewClient(cfg *config.Config) (*Client, error) {
 		Password:         cfg.OpenStackPassword,
 		DomainName:       cfg.OpenStackUserDomainName,
 		TenantName:       cfg.OpenStackProjectName,
-		DomainID:         cfg.OpenStackProjectDomainID,
 	}
 
 	// Create a custom HTTP client to handle potential TLS issues or proxies if needed.
