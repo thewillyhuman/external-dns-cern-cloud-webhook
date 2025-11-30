@@ -29,7 +29,7 @@ func NewClient(cfg *config.Config) (*Client, error) {
 	// For now, we use a standard client but allow for expansion.
 	httpClient := &http.Client{
 		Transport: &http.Transport{
-			TLSClientConfig: &tls.Config{InsecureSkipVerify: false}, // TODO: Add config for insecure
+			TLSClientConfig: &tls.Config{InsecureSkipVerify: true}, // TODO: Add config for insecure
 		},
 	}
 
